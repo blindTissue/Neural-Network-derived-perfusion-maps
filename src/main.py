@@ -15,7 +15,11 @@ parser.add_argument('--restore', help='model path', type=str, default=None)
 parser.add_argument('--tag', help='tag', type=str, default='unet')
 parser.add_argument('--checkpoint_dir', help='best model', type=str, default="src/best_models")
 parser.add_argument('--out_maps_dir', help='outoputs maps dir', type=str, default="src/output_maps")
-parser.add_argument('--batch_size', help='Batch size (default: 8)', type=int, default=16)
+
+# Reduced batch size for memory issues. even setting this to 1 does not solve the problem in 8 gb of vram.  
+#parser.add_argument('--batch_size', help='Batch size (default: 8)', type=int, default=16)
+parser.add_argument('--batch_size', help='Batch size (default: 1)', type=int, default=4)
+
 parser.add_argument('--device', help='Pytorch device', type=str, default="cuda")
 parser.add_argument('--data_path', help='Path of images and maps', type=str, default="DeepHealth_IEEE")
 parser.add_argument('--map_type', help='Type of map/output', type=str, choices=['NLR_CBV', 'NLR_CBF', 'NLR_TTP', 'NLR_MTT'], default="NLR_CBV")
@@ -38,6 +42,7 @@ torch.manual_seed(4122015)
 
 
 def main(args):
+	print(args.batch_size)
 	os.environ["WANDB_API_KEY"] = args.wandb_key
 
 	if args.dim_batch_acc<1:
